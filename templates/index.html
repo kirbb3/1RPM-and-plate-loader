@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>1RM + Plates</title>
+  <style>
+    body { font-family: system-ui, Arial; max-width: 900px; margin: 24px auto; padding: 0 16px; }
+    .card { border: 1px solid #ddd; border-radius: 12px; padding: 16px; margin: 16px 0; }
+    label { display:block; margin-top: 10px; }
+    input { padding: 8px; width: 200px; }
+    button { padding: 10px 14px; margin-top: 12px; cursor: pointer; }
+    table { border-collapse: collapse; width: 100%; margin-top: 12px; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    .error { color: #b00020; }
+    code { background:#f6f6f6; padding:2px 6px; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <h1>Your 1RM + Training Table + Plate Calculator</h1>
+
+  {% if error %}
+    <p class="error">{{ error }}</p>
+  {% endif %}
+
+  <div class="card">
+    <h2>1RM + Training Table</h2>
+    <form method="POST">
+      <input type="hidden" name="mode" value="rm">
+
+      <label>Enter weight used:</label>
+      <input name="weight_used" type="number" step="1" required>
+
+      <label>Amount of reps (1–10):</label>
+      <input name="reps" type="number" min="1" max="10" step="1" required>
+
+      <button type="submit">Calculate 1RM</button>
+    </form>
+
+    {% if rm_output %}
+      <p>Your 1 RPM is <code>{{ rm_output }}</code></p>
+    {% endif %}
+
+    {% if rm_table %}
+      <p>training values based on 1RPM:</p>
+      <table>
+        <tr><th>%</th><th>Weight</th></tr>
+        {% for pct, w in rm_table %}
+          <tr>
+            <td>{{ pct }}%</td>
+            <td>{{ w }}</td>
+          </tr>
+        {% endfor %}
+      </table>
+    {% endif %}
+  </div>
+
+  <div class="card">
+    <h2>Plate Calculator</h2>
+    <form method="POST">
+      <input type="hidden" name="mode" value="plates">
+
+      <label>Enter desired weight:</label>
+      <input name="desired_weight" type="number" step="1" required>
+
+      <button type="submit">Calculate Plates</button>
+    </form>
+
+    {% if plate_output %}
+      <p>plates per side (bar_weight = 45):</p>
+      <ul>
+        {% for p, c in plate_used %}
+          <li>{{ p }} x {{ c }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+
+</body>
+</html>
